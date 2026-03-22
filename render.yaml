@@ -1,0 +1,68 @@
+# Render Blueprint — https://docs.render.com/blueprint-spec
+# Deploys: frontend (Static Site) + backend (Web Service) + PostgreSQL DB
+
+databases:
+  - name: mucdeb-db
+    plan: free
+    databaseName: booking
+    user: booking
+
+services:
+  # Backend — Spring Boot (Docker)
+  - type: web
+    name: mucdeb-backend
+    plan: free
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    repo: https://github.com/lsy-gst/MUC-DEB-Allotment-tool.git
+    branch: prototype
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mucdeb-db
+          property: connectionString
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: mucdeb-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: mucdeb-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JAVA_OPTS
+        value: "-Xmx256m -Xms128m"
+
+  # Frontend — Vite SPA (Static Site)
+  - type: web
+    name: mucdeb-frontend
+    plan: free
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    repo: https://github.com/lsy-gst/MUC-DEB-Allotment-tool.git
+    branch: prototype
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://mucdeb-backend.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NPM_AUTH_TOKEN
+        sync: false
+      - key: VITE_API_BASE_URL
+        value: https://mucdeb-backend.onrender.com
