@@ -22,7 +22,7 @@ echo "🔧 Building backend..."
 cd /workspaces/MUC-DEB-Allotment-tool/backend
 
 chmod +x mvnw
-./mvnw package -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp
+./mvnw install -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp
 
 echo ""
 echo "✅ Codespaces setup complete!"
