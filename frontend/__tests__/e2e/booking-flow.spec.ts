@@ -57,7 +57,8 @@ async function fillPassengerAndBook(page: Page) {
     .getByTestId("email-input")
     .locator("input")
     .fill("test@example.com");
-  await page.getByTestId("phone-input").locator("input").fill("+49123456789");
+  // Phone is a composite field: country code prefix (default +49) + phone number
+  await page.getByLabel("Phone Number").fill("123456789");
 
   // Submit
   await page.getByTestId("book-flight-button").click();
