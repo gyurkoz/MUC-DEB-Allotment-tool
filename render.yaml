@@ -11,7 +11,7 @@ services:
   # Backend — Spring Boot (Docker)
   - type: web
     name: mucdeb-backend
-    plan: free
+    plan: starter
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
