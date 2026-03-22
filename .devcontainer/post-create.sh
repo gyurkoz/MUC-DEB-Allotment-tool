@@ -3,9 +3,20 @@ set -euo pipefail
 
 echo "=== MUC-DEB Booking Tool — Codespaces Setup ==="
 
+WORKSPACE="/workspaces/MUC-DEB-Allotment-tool"
+
+# ── Generate frontend .env from container env vars ──────────────
+echo "📝 Generating frontend .env..."
+cat > "$WORKSPACE/frontend/.env" <<EOF
+DEFAULT_THEME=${DEFAULT_THEME:-lufthansa}
+VITE_ENVIRONMENT=${VITE_ENVIRONMENT:-development}
+EOF
+echo "   DEFAULT_THEME=${DEFAULT_THEME:-lufthansa}"
+echo "   VITE_ENVIRONMENT=${VITE_ENVIRONMENT:-development}"
+
 # ── Frontend setup ──────────────────────────────────────────────
 echo "📦 Installing frontend dependencies..."
-cd /workspaces/MUC-DEB-Allotment-tool/frontend
+cd "$WORKSPACE/frontend"
 
 if [ -z "${NPM_AUTH_TOKEN:-}" ]; then
   echo "⚠️  NPM_AUTH_TOKEN not set — @lsy-netline packages will fail to install."
@@ -19,7 +30,7 @@ npm ci || {
 
 # ── Backend setup ───────────────────────────────────────────────
 echo "🔧 Building backend..."
-cd /workspaces/MUC-DEB-Allotment-tool/backend
+cd "$WORKSPACE/backend"
 
 chmod +x mvnw
 ./mvnw install -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp
