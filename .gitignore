@@ -40,6 +40,7 @@ Thumbs.db
 backend/**/target/
 backend/**/*.class
 backend/**/*.jar
+!backend/.mvn/wrapper/maven-wrapper.jar
 backend/**/*.war
 backend/**/*.log
 backend/**/hs_err_pid*

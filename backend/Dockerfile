@@ -4,8 +4,15 @@ COPY . .
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
 ARG NO_PROXY
-ENV JAVA_TOOL_OPTIONS="-Dhttps.proxyHost=proxy.lsy.bud.dlh.de -Dhttps.proxyPort=3128 -Dhttp.proxyHost=proxy.lsy.bud.dlh.de -Dhttp.proxyPort=3128"
-RUN chmod +x mvnw && ./mvnw package -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp -s .mvn/docker-settings.xml
+ARG JAVA_TOOL_OPTIONS=""
+ARG MAVEN_SETTINGS=.mvn/docker-settings.xml
+ENV JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
+RUN chmod +x mvnw && \
+    if [ -n "${JAVA_TOOL_OPTIONS}" ]; then \
+      ./mvnw package -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp -s ${MAVEN_SETTINGS}; \
+    else \
+      ./mvnw package -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp; \
+    fi
 
 FROM eclipse-temurin:21-jre-alpine
 LABEL maintainer=booking-team

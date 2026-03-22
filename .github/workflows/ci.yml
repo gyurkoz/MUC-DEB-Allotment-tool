@@ -181,6 +181,9 @@ jobs:
         run: docker compose build
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          HTTP_PROXY: ""
+          HTTPS_PROXY: ""
+          NO_PROXY: ""
 
       - name: Start stack
         run: docker compose up -d
