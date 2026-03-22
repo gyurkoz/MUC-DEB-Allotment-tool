@@ -31,11 +31,19 @@
   "secrets": {
     "NPM_AUTH_TOKEN": {
       "description": "GitHub Packages token for @lsy-netline scoped packages"
+    },
+    "DEFAULT_THEME": {
+      "description": "UI theme (default: lufthansa)"
+    },
+    "VITE_ENVIRONMENT": {
+      "description": "Environment mode (default: development)"
     }
   },
 
   "containerEnv": {
     "NPM_AUTH_TOKEN": "${localEnv:NPM_AUTH_TOKEN}",
+    "DEFAULT_THEME": "${localEnv:DEFAULT_THEME:lufthansa}",
+    "VITE_ENVIRONMENT": "${localEnv:VITE_ENVIRONMENT:development}",
     "SPRING_PROFILES_ACTIVE": "codespaces",
     "JWT_SECRET": "codespaces-dev-jwt-secret-not-for-production-2026"
   },
