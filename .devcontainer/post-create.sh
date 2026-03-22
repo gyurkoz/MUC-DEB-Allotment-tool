@@ -5,7 +5,7 @@ echo "=== MUC-DEB Booking Tool — Codespaces Setup ==="
 
 # ── Frontend setup ──────────────────────────────────────────────
 echo "📦 Installing frontend dependencies..."
-cd /workspaces/MUC-DEB-Booking-tool/frontend
+cd /workspaces/MUC-DEB-Allotment-tool/frontend
 
 if [ -z "${NPM_AUTH_TOKEN:-}" ]; then
   echo "⚠️  NPM_AUTH_TOKEN not set — @lsy-netline packages will fail to install."
@@ -19,7 +19,7 @@ npm ci || {
 
 # ── Backend setup ───────────────────────────────────────────────
 echo "🔧 Building backend..."
-cd /workspaces/MUC-DEB-Booking-tool/backend
+cd /workspaces/MUC-DEB-Allotment-tool/backend
 
 chmod +x mvnw
 ./mvnw package -DskipTests -Djacoco.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -B -ntp
