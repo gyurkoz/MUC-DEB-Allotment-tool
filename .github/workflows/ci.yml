@@ -186,22 +186,26 @@ jobs:
           NO_PROXY: ""
 
       - name: Start stack
-        run: docker compose up -d
+        run: docker compose up -d --no-build
         env:
           JWT_SECRET: ci-test-jwt-secret-at-least-48-characters-long-for-hs384
+          HTTP_PROXY: ""
+          HTTPS_PROXY: ""
+          NO_PROXY: ""
 
       - name: Wait for backend health
         run: |
-          for i in {1..30}; do
+          for i in {1..40}; do
             if curl -sf http://localhost:8080/actuator/health > /dev/null 2>&1; then
               echo "✅ Backend is healthy!"
               exit 0
             fi
-            echo "Waiting for backend... ($i/30)"
+            echo "Waiting for backend... ($i/40)"
             sleep 5
           done
           echo "❌ Backend did not become healthy in time"
           docker compose logs backend
+          docker compose logs database
           exit 1
 
       - name: Verify frontend
