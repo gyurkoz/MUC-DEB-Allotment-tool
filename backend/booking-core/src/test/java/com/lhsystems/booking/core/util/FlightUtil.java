@@ -54,6 +54,7 @@ public final class FlightUtil {
                 ARRIVAL_TIME,
                 TRAVEL_TIME,
                 0,
+                null,
                 SEATS,
                 new PriceDTO(PRICE, CURRENCY),
                 "AVAILABLE");

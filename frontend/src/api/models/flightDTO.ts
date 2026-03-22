@@ -12,6 +12,7 @@ export interface FlightDTO {
   arrivalTime?: string;
   travelTimeMinutes?: number;
   stops?: number;
+  stopoverAirport?: string;
   availableSeats?: number;
   price?: PriceDTO;
   status?: FlightDTOStatus;

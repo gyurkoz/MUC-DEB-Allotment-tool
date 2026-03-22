@@ -49,6 +49,7 @@ class FlightServiceTest {
                         LocalDateTime.of(2026, 4, 1, 9, 30),
                         90,
                         0,
+                        null,
                         150,
                         new BigDecimal("149.00"),
                         "EUR");
@@ -93,6 +94,7 @@ class FlightServiceTest {
                         LocalDateTime.of(2026, 4, 1, 9, 30),
                         90,
                         0,
+                        null,
                         150,
                         new BigDecimal("149.00"),
                         "EUR");
@@ -124,6 +126,7 @@ class FlightServiceTest {
                         LocalDateTime.of(2026, 4, 1, 9, 30),
                         90,
                         1,
+                        "FRA",
                         120,
                         new BigDecimal("199.00"),
                         "EUR");
@@ -156,6 +159,7 @@ class FlightServiceTest {
                         LocalDateTime.of(2026, 4, 1, 9, 30),
                         90,
                         0,
+                        null,
                         0,
                         new BigDecimal("149.00"),
                         "EUR");

@@ -162,6 +162,7 @@ class BookingControllerTest {
                 90,
                 0,
                 null,
+                null,
                 new PriceDTO(new BigDecimal("149.00"), "EUR"),
                 null);
         var passenger = new PassengerDTO("U1234567", "John", "Doe", "john@test.com", "+49123456789");

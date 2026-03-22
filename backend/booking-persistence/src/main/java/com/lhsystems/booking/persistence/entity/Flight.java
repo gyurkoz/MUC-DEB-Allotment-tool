@@ -43,6 +43,9 @@ public class Flight {
     @Column(name = "stops", nullable = false)
     private Integer stops;
 
+    @Column(name = "stopover_airport", length = 10)
+    private String stopoverAirport;
+
     @Column(name = "available_seats", nullable = false)
     private Integer availableSeats;
 
@@ -129,6 +132,14 @@ public class Flight {
 
     public void setStops(Integer stops) {
         this.stops = stops;
+    }
+
+    public String getStopoverAirport() {
+        return stopoverAirport;
+    }
+
+    public void setStopoverAirport(String stopoverAirport) {
+        this.stopoverAirport = stopoverAirport;
     }
 
     public Integer getAvailableSeats() {

@@ -84,6 +84,8 @@ export function FlightCalendar({
 				arrivalTime={flight.arrivalTime ?? ""}
 				availableSeats={flight.availableSeats ?? 0}
 				marketingAirline={flight.marketingAirline}
+				stops={flight.stops ?? 0}
+				stopoverAirport={flight.stopoverAirport}
 				isPast={isPast}
 				onClick={
 					!isPast && eventDate >= today

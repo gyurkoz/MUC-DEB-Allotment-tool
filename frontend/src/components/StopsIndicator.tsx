@@ -13,6 +13,8 @@ export interface StopsIndicatorProps {
 	stops: number;
 	/** Flight duration (e.g., "1h 30m") */
 	duration?: string;
+	/** IATA code of the stopover airport */
+	stopoverAirport?: string;
 	/** Callback when stop link is clicked */
 	onStopoverClick?: () => void;
 }
@@ -72,18 +74,21 @@ const StopDot = styled(CircleIcon)(({ theme }) => ({
 	color: theme.palette.text.secondary,
 }));
 
-function buildStopLabel(stops: number): string {
+function buildStopLabel(stops: number, stopoverAirport?: string): string {
 	if (stops === 0) return "Direct flight";
+	if (stops === 1 && stopoverAirport) return `1 stop (${stopoverAirport})`;
 	if (stops === 1) return "1 stop";
+	if (stopoverAirport) return `${stops} stops (${stopoverAirport})`;
 	return `${stops} stops`;
 }
 
 export function StopsIndicator({
 	stops,
 	duration,
+	stopoverAirport,
 	onStopoverClick,
 }: StopsIndicatorProps) {
-	const displayLabel = buildStopLabel(stops);
+	const displayLabel = buildStopLabel(stops, stopoverAirport);
 
 	const handleLinkClick = (e: React.MouseEvent) => {
 		e.preventDefault();

@@ -157,6 +157,7 @@ export function FlightDetailCard({
 							}}
 							stops={flight.stops ?? 0}
 							duration={formatDuration(flight.travelTimeMinutes)}
+							stopoverAirport={flight.stopoverAirport}
 							onStopoverClick={
 								(flight.stops ?? 0) > 0
 									? () => setShowStopover(true)

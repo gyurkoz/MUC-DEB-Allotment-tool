@@ -22,6 +22,8 @@ export interface FlightScheduleRowProps {
 	stops: number;
 	/** Total flight duration (e.g., "1h 30m") */
 	duration?: string;
+	/** IATA code of the stopover airport */
+	stopoverAirport?: string;
 	/** Callback when stopover link is clicked */
 	onStopoverClick?: () => void;
 }
@@ -57,6 +59,7 @@ export function FlightScheduleRow({
 	arrival,
 	stops,
 	duration,
+	stopoverAirport,
 	onStopoverClick,
 }: FlightScheduleRowProps) {
 	return (
@@ -80,6 +83,7 @@ export function FlightScheduleRow({
 				<StopsIndicator
 					stops={stops}
 					duration={duration}
+					stopoverAirport={stopoverAirport}
 					onStopoverClick={onStopoverClick}
 				/>
 			</StopsBox>

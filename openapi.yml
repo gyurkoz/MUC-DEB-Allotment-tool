@@ -282,6 +282,10 @@ components:
         stops:
           type: integer
           example: 0
+        stopoverAirport:
+          type: string
+          description: IATA code of the stopover airport (null for direct flights)
+          example: FRA
         availableSeats:
           type: integer
           example: 12

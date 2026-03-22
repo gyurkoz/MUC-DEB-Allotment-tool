@@ -8,6 +8,10 @@ interface FlightCardProps {
 	arrivalTime: string;
 	availableSeats: number;
 	marketingAirline?: string;
+	/** Number of stops (0 = direct) */
+	stops?: number;
+	/** IATA code of the stopover airport */
+	stopoverAirport?: string;
 	/** Whether this flight's departure is in the past */
 	isPast?: boolean;
 	onClick?: () => void;
@@ -19,6 +23,8 @@ export function FlightCard({
 	arrivalTime,
 	availableSeats,
 	marketingAirline,
+	stops = 0,
+	stopoverAirport,
 	isPast = false,
 	onClick,
 }: FlightCardProps) {
@@ -44,7 +50,7 @@ export function FlightCard({
 				minWidth: 120,
 				opacity: isPast ? 0.4 : availableSeats === 0 ? 0.5 : 1,
 				cursor: isDisabled ? "default" : "pointer",
-				maxHeight: 50,
+				maxHeight: stops > 0 ? 64 : 50,
 				filter: isPast ? "grayscale(100%)" : undefined,
 				pointerEvents: isPast ? "none" : undefined,
 				width: "100%",
@@ -77,6 +83,16 @@ export function FlightCard({
 						{arrTime}
 					</Typography>
 				</Box>
+				{stops > 0 && (
+					<Typography
+						variant="caption"
+						color="warning.main"
+						sx={{ fontSize: 10, fontWeight: 500 }}
+					>
+						{stops === 1 ? "1 stop" : `${stops} stops`}
+						{stopoverAirport ? ` (${stopoverAirport})` : ""}
+					</Typography>
+				)}
 				{!isPast && (
 					<Box sx={{ position: "absolute", top: 4, right: 4 }}>
 						<SeatsBadge availableSeats={availableSeats} size="small" />

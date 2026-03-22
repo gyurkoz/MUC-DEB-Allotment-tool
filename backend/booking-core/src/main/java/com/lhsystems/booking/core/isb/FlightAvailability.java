@@ -17,6 +17,7 @@ public record FlightAvailability(
         LocalDateTime arrivalTime,
         int travelTimeMinutes,
         int stops,
+        String stopoverAirport,
         int availableSeats,
         BigDecimal priceAmount,
         String priceCurrency) {}

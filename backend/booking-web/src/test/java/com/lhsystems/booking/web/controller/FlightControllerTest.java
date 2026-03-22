@@ -56,6 +56,7 @@ class FlightControllerTest {
                         LocalDateTime.of(2026, 4, 1, 9, 30),
                         90,
                         0,
+                        null,
                         150,
                         new PriceDTO(new BigDecimal("149.00"), "EUR"),
                         "AVAILABLE");

@@ -87,6 +87,7 @@ public class FlightService {
             flight.setArrivalTime(avail.arrivalTime());
             flight.setTravelTimeMinutes(avail.travelTimeMinutes());
             flight.setStops(avail.stops());
+            flight.setStopoverAirport(avail.stopoverAirport());
             flight.setAvailableSeats(avail.availableSeats());
             flight.setPriceAmount(avail.priceAmount());
             flight.setPriceCurrency(avail.priceCurrency());

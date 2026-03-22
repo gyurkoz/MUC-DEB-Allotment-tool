@@ -20,6 +20,7 @@ public class FlightMapper {
                 entity.getArrivalTime(),
                 entity.getTravelTimeMinutes(),
                 entity.getStops(),
+                entity.getStopoverAirport(),
                 entity.getAvailableSeats(),
                 new PriceDTO(entity.getPriceAmount(), entity.getPriceCurrency()),
                 entity.getStatus().name());

@@ -27,6 +27,7 @@ public class BookingMapper {
                         entity.getTravelTimeMinutes(),
                         entity.getStops(),
                         null,
+                        null,
                         new PriceDTO(entity.getPriceAmount(), entity.getPriceCurrency()),
                         null);
 

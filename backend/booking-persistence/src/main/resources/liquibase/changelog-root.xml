@@ -9,4 +9,5 @@
     <include file="changelog-002-create-bookings.xml" relativeToChangelogFile="true"/>
     <include file="changelog-003-create-flights.xml" relativeToChangelogFile="true"/>
     <include file="changelog-004-seed-admin-user.xml" relativeToChangelogFile="true"/>
+    <include file="changelog-005-add-stopover-airport.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -369,6 +369,7 @@ public class IsbSoapClient implements IsbClient {
                             arrival,
                             travelMinutes,
                             Integer.parseInt(extractXmlValueOrDefault(leg, "numberOfStops", "0")),
+                            extractXmlValueOrDefault(leg, "stopoverAirport", null),
                             Integer.parseInt(extractXmlValueOrDefault(leg, "numberOfSeats", "0")),
                             new BigDecimal(extractXmlValueOrDefault(leg, "price", "0")),
                             extractXmlValueOrDefault(leg, "currency", "EUR")));

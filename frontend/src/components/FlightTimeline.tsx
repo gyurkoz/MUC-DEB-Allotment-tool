@@ -241,8 +241,8 @@ export function FlightTimeline({
 								<StopoverWarning>
 									<Typography variant="body2" sx={{ fontWeight: 500 }}>
 										{stops === 1
-											? "1 intermediate stop"
-											: `${stops} intermediate stops`}
+											? `1 intermediate stop${flight.stopoverAirport ? ` in ${flight.stopoverAirport}` : ""}`
+											: `${stops} intermediate stops${flight.stopoverAirport ? ` via ${flight.stopoverAirport}` : ""}`}
 									</Typography>
 								</StopoverWarning>
 							</TimelineContent>

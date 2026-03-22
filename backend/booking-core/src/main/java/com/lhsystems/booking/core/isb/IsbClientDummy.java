@@ -23,6 +23,9 @@ public class IsbClientDummy implements IsbClient {
     private static final String PNR_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int PNR_LENGTH = 6;
 
+    /** Stopover airports for flights with stops, indexed by hash byte. */
+    private static final String[] STOPOVER_AIRPORTS = {"FRA", "VIE", "BUD", "ZRH"};
+
     private static final List<FlightTemplate> MUC_TO_DEB =
             List.of(
                     new FlightTemplate("LH1234", LocalTime.of(6, 15), 85, "LH"),
@@ -57,6 +60,7 @@ public class IsbClientDummy implements IsbClient {
             // Derive realistic values from deterministic hash
             int seats = deriveSeatCount(hash);
             int stops = deriveStops(hash);
+            String stopoverAirport = stops > 0 ? deriveStopoverAirport(hash) : null;
             BigDecimal price = derivePrice(hash, tmpl.baseMinutes(), stops);
             int actualMinutes = tmpl.baseMinutes() + (stops > 0 ? stops * 45 : 0);
             var departureTime = LocalDateTime.of(date, tmpl.time());
@@ -70,8 +74,7 @@ public class IsbClientDummy implements IsbClient {
                             departureTime,
                             departureTime.plusMinutes(actualMinutes),
                             actualMinutes,
-                            stops,
-                            seats,
+                            stops,                            stopoverAirport,                            seats,
                             price,
                             "EUR"));
         }
@@ -126,6 +129,11 @@ public class IsbClientDummy implements IsbClient {
             return 1; // ~24% one stop
         }
         return 2; // ~6% two stops
+    }
+
+    static String deriveStopoverAirport(byte[] hash) {
+        int raw = Byte.toUnsignedInt(hash[7]);
+        return STOPOVER_AIRPORTS[raw % STOPOVER_AIRPORTS.length];
     }
 
     static BigDecimal derivePrice(byte[] hash, int baseMinutes, int stops) {

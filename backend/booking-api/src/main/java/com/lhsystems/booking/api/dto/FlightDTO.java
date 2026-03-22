@@ -12,6 +12,7 @@ public record FlightDTO(
         LocalDateTime arrivalTime,
         Integer travelTimeMinutes,
         Integer stops,
+        String stopoverAirport,
         Integer availableSeats,
         PriceDTO price,
         String status) {}
