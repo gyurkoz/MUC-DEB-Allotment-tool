@@ -1,0 +1,60 @@
+{
+  "$schema": "./config.schema.json",
+  "customer": {
+    "id": "default",
+    "name": "mucdeb",
+    "displayName": "MUC - DEB Allotment Tool",
+    "code": "XX"
+  },
+  "app": {
+    "title": "MUC - DEB Allotment Tool",
+    "defaultLanguage": "en",
+    "defaultLocale": "en-US",
+    "supportedLanguages": ["en", "de"],
+    "localStorageKey": "mucdeb-default",
+    "localStorageDefaultExpiryDays": 90
+  },
+  "theme": {
+    "palette": {
+      "primary": {
+        "main": "#1976d2",
+        "dark": "#115293",
+        "light": "#4791db",
+        "contrastText": "#ffffff"
+      },
+      "secondary": {
+        "main": "#dc004e",
+        "dark": "#9a0036",
+        "light": "#e33371",
+        "contrastText": "#ffffff"
+      },
+      "text": {
+        "primary": "#202020",
+        "secondary": "#606060",
+        "disabled": "#757575"
+      }
+    },
+    "typography": {
+      "fontFamily": "Roboto, Arial, sans-serif"
+    },
+    "components": {}
+  },
+  "assets": {
+    "logo": {
+      "light": null,
+      "dark": null
+    },
+    "icons": {
+      "favicon": "/favicon.ico",
+      "appleTouchIcon": "/favicon.ico",
+      "pwaIcons": []
+    }
+  },
+  "manifest": {
+    "name": "MUC - DEB Allotment Tool",
+    "shortName": "MUC-DEB",
+    "description": "Flight booking tool for MUC-DEB routes",
+    "themeColor": "#1976d2",
+    "backgroundColor": "#ffffff"
+  }
+}

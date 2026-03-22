@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Customer Configuration Schema",
+  "type": "object",
+  "required": ["customer", "app", "theme", "assets", "manifest"],
+  "properties": {
+    "customer": {
+      "type": "object",
+      "required": ["id", "name", "displayName"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "code": { "type": "string" }
+      }
+    },
+    "app": {
+      "type": "object",
+      "required": [
+        "title",
+        "defaultLanguage",
+        "defaultLocale",
+        "supportedLanguages",
+        "localStorageKey",
+        "localStorageDefaultExpiryDays"
+      ],
+      "properties": {
+        "title": { "type": "string" },
+        "defaultLanguage": { "type": "string" },
+        "defaultLocale": { "type": "string" },
+        "supportedLanguages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "localStorageKey": { "type": "string" },
+        "localStorageDefaultExpiryDays": { "type": "number" }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "palette": { "type": "object" },
+        "typography": { "type": "object" },
+        "components": { "type": "object" },
+        "fonts": { "type": "object" }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["logo", "icons"],
+      "properties": {
+        "logo": {
+          "type": "object",
+          "properties": {
+            "light": { "type": ["string", "null"] },
+            "dark": { "type": ["string", "null"] }
+          }
+        },
+        "icons": {
+          "type": "object",
+          "properties": {
+            "favicon": { "type": "string" },
+            "appleTouchIcon": { "type": "string" },
+            "pwaIcons": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "required": [
+        "name",
+        "shortName",
+        "description",
+        "themeColor",
+        "backgroundColor"
+      ],
+      "properties": {
+        "name": { "type": "string" },
+        "shortName": { "type": "string" },
+        "description": { "type": "string" },
+        "themeColor": { "type": "string" },
+        "backgroundColor": { "type": "string" }
+      }
+    }
+  }
+}

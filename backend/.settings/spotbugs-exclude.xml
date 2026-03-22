@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+
+    <!-- Excluding Spring bean constructor injection related bug alerts. -->
+    <Match>
+        <Method name="&lt;init&gt;"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- JPA entity getters/setters for embedded objects -->
+    <Match>
+        <Class name="~com\.lhsystems\.booking\.persistence\.entity\..*"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="~com\.lhsystems\.booking\.persistence\.entity\..*"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <Match>
+        <Class name="com.lhsystems.booking.web.exception.GlobalExceptionHandler"/>
+        <Bug pattern="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE"/>
+    </Match>
+
+    <Match>
+        <Class name="com.lhsystems.booking.web.controller.AuthController"/>
+        <Bug pattern="CRLF_INJECTION_LOGS"/>
+    </Match>
+
+    <Match>
+        <Class name="com.lhsystems.booking.web.controller.FlightController"/>
+        <Bug pattern="CRLF_INJECTION_LOGS"/>
+    </Match>
+
+    <Match>
+        <Class name="com.lhsystems.booking.web.controller.BookingController"/>
+        <Bug pattern="CRLF_INJECTION_LOGS"/>
+    </Match>
+
+    <!-- Suppress HARD_CODE_PASSWORD for BCrypt hash in seeder/config -->
+    <Match>
+        <Class name="com.lhsystems.booking.web.configuration.SecurityConfig"/>
+        <Bug pattern="HARD_CODE_PASSWORD"/>
+    </Match>
+
+    <!-- Suppress Spring Security CSRF disabled warning -->
+    <Match>
+        <Class name="com.lhsystems.booking.web.configuration.SecurityConfig"/>
+        <Bug pattern="SPRING_CSRF_PROTECTION_DISABLED"/>
+    </Match>
+
+    <!-- Suppress permissive CORS warning for dev -->
+    <Match>
+        <Class name="com.lhsystems.booking.web.configuration.CorsConfig"/>
+        <Bug pattern="PERMISSIVE_CORS"/>
+    </Match>
+
+    <!-- JWT token handling -->
+    <Match>
+        <Class name="com.lhsystems.booking.core.service.JwtService"/>
+        <Bug pattern="HARD_CODE_KEY"/>
+    </Match>
+    <Match>
+        <Class name="com.lhsystems.booking.core.service.JwtService"/>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+
+</FindBugsFilter>

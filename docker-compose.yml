@@ -1,0 +1,89 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NPM_AUTH_TOKEN: ${NPM_AUTH_TOKEN}
+    container_name: mucdeb-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        HTTP_PROXY: ${HTTP_PROXY:-http://proxy.lsy.bud.dlh.de:3128}
+        HTTPS_PROXY: ${HTTPS_PROXY:-http://proxy.lsy.bud.dlh.de:3128}
+        NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1}
+    container_name: mucdeb-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mariadb://database:3306/booking
+      SPRING_DATASOURCE_USERNAME: booking
+      SPRING_DATASOURCE_PASSWORD: booking
+      JWT_SECRET: ${JWT_SECRET:-mucdeb-booking-jwt-secret-change-in-production-2026}
+      ISB_RESERVATION_ENDPOINT: ${ISB_RESERVATION_ENDPOINT:-https://isb-test.example.com/reservation}
+      ISB_AUTH_ENDPOINT: ${ISB_AUTH_ENDPOINT:-https://isb-test.example.com/auth}
+      MAIL_HOST: ${MAIL_HOST:-mailpit}
+      MAIL_PORT: ${MAIL_PORT:-1025}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  database:
+    image: mariadb:latest
+    container_name: mucdeb-database
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: booking
+      MARIADB_USER: booking
+      MARIADB_PASSWORD: booking
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-ubooking", "-pbooking"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mucdeb-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+volumes:
+  mariadb-data:
+
+networks:
+  app-network:
+    driver: bridge

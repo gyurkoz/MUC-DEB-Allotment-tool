@@ -1,0 +1,386 @@
+openapi: 3.0.3
+info:
+  title: MUC - DEB Allotment Tool API
+  version: 1.0.0
+  description: Flight booking API for Munich (MUC) ↔ Debrecen (DEB) routes
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+  - url: http://backend:8080
+    description: Docker internal
+
+tags:
+  - name: auth
+    description: Authentication endpoints
+  - name: flights
+    description: Flight availability
+  - name: bookings
+    description: Booking management
+
+paths:
+  /api/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Authenticate user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequestDTO"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponseDTO"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+
+  /api/flights:
+    get:
+      operationId: getFlights
+      tags: [flights]
+      summary: Get available flights
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: direction
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [MUC-DEB, DEB-MUC]
+        - name: dateFrom
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: List of available flights
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FlightDTO"
+        "400":
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+
+  /api/booking:
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a new booking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingRequestDTO"
+      responses:
+        "201":
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponseDTO"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "409":
+          description: No seats available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "502":
+          description: GDS communication error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+
+  /api/booking/{bookingId}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get booking details and status
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponseDTO"
+        "404":
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+
+  /api/booking/{bookingId}/cancel:
+    post:
+      operationId: cancelBooking
+      tags: [bookings]
+      summary: Cancel a booking
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: email
+          in: query
+          required: true
+          description: Passenger email for verification
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Booking cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponseDTO"
+        "400":
+          description: Cancellation not possible
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "403":
+          description: Email does not match
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "404":
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "409":
+          description: Already cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+        "502":
+          description: GDS communication error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDTO"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequestDTO:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          minLength: 1
+          example: admin
+        password:
+          type: string
+          minLength: 1
+          example: admin
+
+    LoginResponseDTO:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9...
+        user:
+          $ref: "#/components/schemas/UserDTO"
+
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+
+    FlightDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique flight identifier (e.g., LH1234_20260321)
+          example: LH1234_20260321
+        flightNumber:
+          type: string
+          example: LH1234
+        marketingAirline:
+          type: string
+          example: LH
+        departureAirport:
+          type: string
+          example: MUC
+        arrivalAirport:
+          type: string
+          example: DEB
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        travelTimeMinutes:
+          type: integer
+          example: 90
+        stops:
+          type: integer
+          example: 0
+        availableSeats:
+          type: integer
+          example: 12
+        price:
+          $ref: "#/components/schemas/PriceDTO"
+        status:
+          type: string
+          enum: [AVAILABLE, SOLD_OUT, FLIGHT_CANCELLED, DELAYED]
+
+    PriceDTO:
+      type: object
+      properties:
+        amount:
+          type: number
+          example: 149.00
+        currency:
+          type: string
+          example: EUR
+
+    PassengerDTO:
+      type: object
+      required: [uNumber, firstName, lastName, email, phoneNumber]
+      properties:
+        uNumber:
+          type: string
+          pattern: ^U[0-9]+$
+          example: U123456
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: John
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        phoneNumber:
+          type: string
+          example: "+49123456789"
+
+    BookingRequestDTO:
+      type: object
+      required: [flightId, passenger]
+      properties:
+        flightId:
+          type: string
+          example: LH1234_20260321
+        passenger:
+          $ref: "#/components/schemas/PassengerDTO"
+
+    BookingResponseDTO:
+      type: object
+      properties:
+        bookingId:
+          type: string
+          format: uuid
+        pnr:
+          type: string
+          description: Amadeus PNR record locator
+          example: ABC123
+        status:
+          type: string
+          enum:
+            [
+              CONFIRMED,
+              PENDING,
+              CANCELLED,
+              REJECTED,
+              FLIGHT_CANCELLED,
+              FLIGHT_DELAYED,
+            ]
+        flight:
+          $ref: "#/components/schemas/FlightDTO"
+        passenger:
+          $ref: "#/components/schemas/PassengerDTO"
+        createdAt:
+          type: string
+          format: date-time
+        cancellable:
+          type: boolean
+          description: Whether the booking can still be cancelled (>24h before departure)
+
+    ErrorDTO:
+      type: object
+      properties:
+        error:
+          type: string
+          example: NOT_FOUND
+        message:
+          type: string
+          example: Booking not found
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+          example: /api/booking/123e4567-e89b-12d3-a456-426614174000

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="004-seed-admin-user" author="booking-team" context="dev,test,docker">
+        <insert tableName="users">
+            <column name="username" value="admin"/>
+            <!-- BCrypt hash of "admin" -->
+            <column name="password" value="$2b$10$xT.3GiTk/x1Hti2qcXlUSeFlSeLnLYee3pomPc/vS5Zsvrm98ckmC"/>
+            <column name="email" value="admin@mucdeb-booking.local"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

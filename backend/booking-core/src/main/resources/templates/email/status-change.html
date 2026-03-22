@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Booking Status Update</title>
+</head>
+<body>
+<h1>Booking Status Update</h1>
+<p>Dear <span th:text="${booking.passenger.firstName}">John</span>,</p>
+<p>The status of your booking has changed:</p>
+<table>
+    <tr><td><strong>PNR:</strong></td><td th:text="${booking.pnr}">ABC123</td></tr>
+    <tr><td><strong>Flight:</strong></td><td th:text="${booking.flightNumber}">LH1234</td></tr>
+    <tr><td><strong>Previous Status:</strong></td><td th:text="${oldStatus}">CONFIRMED</td></tr>
+    <tr><td><strong>New Status:</strong></td><td th:text="${booking.status}">FLIGHT_DELAYED</td></tr>
+</table>
+<p>If you have any questions, please contact our support team.</p>
+</body>
+</html>

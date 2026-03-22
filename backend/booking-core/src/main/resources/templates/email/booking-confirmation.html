@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Booking Confirmation</title>
+</head>
+<body>
+<h1>Booking Confirmed!</h1>
+<p>Dear <span th:text="${booking.passenger.firstName}">John</span>,</p>
+<p>Your booking has been confirmed with the following details:</p>
+<table>
+    <tr><td><strong>PNR:</strong></td><td th:text="${booking.pnr}">ABC123</td></tr>
+    <tr><td><strong>Flight:</strong></td><td th:text="${booking.flightNumber}">LH1234</td></tr>
+    <tr><td><strong>Route:</strong></td>
+        <td><span th:text="${booking.departureAirport}">MUC</span> →
+            <span th:text="${booking.arrivalAirport}">DEB</span></td></tr>
+    <tr><td><strong>Departure:</strong></td><td th:text="${booking.departureTime}">2026-03-21 08:00</td></tr>
+    <tr><td><strong>Status:</strong></td><td th:text="${booking.status}">CONFIRMED</td></tr>
+</table>
+<p>You can check your booking status at any time using your booking ID:</p>
+<p><strong th:text="${booking.id}">uuid</strong></p>
+<p>Thank you for choosing MUC - DEB Allotment Tool!</p>
+</body>
+</html>

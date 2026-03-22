@@ -1,0 +1,154 @@
+{
+  "$schema": "../config.schema.json",
+  "customer": {
+    "id": "lufthansa",
+    "name": "lufthansa",
+    "displayName": "Lufthansa",
+    "code": "LH"
+  },
+  "app": {
+    "title": "MUC - DEB Allotment Tool",
+    "defaultLanguage": "de",
+    "defaultLocale": "de-DE",
+    "supportedLanguages": ["de", "en"],
+    "localStorageKey": "mucdeb-lh",
+    "localStorageDefaultExpiryDays": 90
+  },
+  "theme": {
+    "palette": {
+      "primary": {
+        "main": "#05164d",
+        "dark": "#030f36",
+        "light": "#1a2d6e",
+        "contrastText": "#ffffff"
+      },
+      "secondary": {
+        "main": "#ffad00",
+        "light": "#ffbd33",
+        "dark": "#cc8a00",
+        "contrastText": "#05164d"
+      }
+    },
+    "typography": {
+      "fontFamily": "\"Lufthansa Text\", \"Lufthansa Head\", Roboto, Arial, sans-serif",
+      "h1": {
+        "fontFamily": "\"Lufthansa Head\", Roboto, Arial, sans-serif",
+        "fontWeight": 300
+      },
+      "h2": {
+        "fontFamily": "\"Lufthansa Head\", Roboto, Arial, sans-serif",
+        "fontWeight": 300
+      },
+      "h3": {
+        "fontFamily": "\"Lufthansa Head\", Roboto, Arial, sans-serif",
+        "fontWeight": 300
+      },
+      "h4": {
+        "fontFamily": "\"Lufthansa Head\", Roboto, Arial, sans-serif",
+        "fontWeight": 700
+      },
+      "h5": {
+        "fontFamily": "\"Lufthansa Head\", Roboto, Arial, sans-serif",
+        "fontWeight": 700
+      },
+      "h6": {
+        "fontFamily": "\"Lufthansa Head\", Roboto, Arial, sans-serif",
+        "fontWeight": 700
+      },
+      "body1": {
+        "fontFamily": "\"Lufthansa Text\", Roboto, Arial, sans-serif",
+        "fontWeight": 400
+      },
+      "body2": {
+        "fontFamily": "\"Lufthansa Text\", Roboto, Arial, sans-serif",
+        "fontWeight": 300
+      },
+      "button": {
+        "fontFamily": "\"Lufthansa Text\", Roboto, Arial, sans-serif",
+        "fontWeight": 700
+      }
+    },
+    "fonts": {
+      "customFonts": [
+        {
+          "family": "Lufthansa Head",
+          "src": [
+            {
+              "url": "/fonts/lufthansa/LufthansaHeadWeb-Bold.woff2",
+              "format": "woff2"
+            }
+          ],
+          "weight": 700,
+          "style": "normal",
+          "display": "swap"
+        },
+        {
+          "family": "Lufthansa Head",
+          "src": [
+            {
+              "url": "/fonts/lufthansa/LufthansaHeadWeb-Light.woff2",
+              "format": "woff2"
+            }
+          ],
+          "weight": 300,
+          "style": "normal",
+          "display": "swap"
+        },
+        {
+          "family": "Lufthansa Text",
+          "src": [
+            {
+              "url": "/fonts/lufthansa/LufthansaTextWeb-Regular.woff2",
+              "format": "woff2"
+            }
+          ],
+          "weight": 400,
+          "style": "normal",
+          "display": "swap"
+        },
+        {
+          "family": "Lufthansa Text",
+          "src": [
+            {
+              "url": "/fonts/lufthansa/LufthansaTextWeb-Bold.woff2",
+              "format": "woff2"
+            }
+          ],
+          "weight": 700,
+          "style": "normal",
+          "display": "swap"
+        },
+        {
+          "family": "Lufthansa Text",
+          "src": [
+            {
+              "url": "/fonts/lufthansa/LufthansaTextWeb-Light.woff2",
+              "format": "woff2"
+            }
+          ],
+          "weight": 300,
+          "style": "normal",
+          "display": "swap"
+        }
+      ]
+    }
+  },
+  "assets": {
+    "logo": {
+      "light": "./assets/lh_logo_STANDARD_blue_rgb.svg",
+      "dark": "./assets/lh_logo_STANDARD_white_rgb.svg"
+    },
+    "icons": {
+      "favicon": "/favicon.ico",
+      "appleTouchIcon": "/favicon.ico",
+      "pwaIcons": []
+    }
+  },
+  "manifest": {
+    "name": "MUC - DEB Allotment Tool",
+    "shortName": "MUC-DEB",
+    "description": "Lufthansa MUC-DEB Flight Booking Tool",
+    "themeColor": "#05164d",
+    "backgroundColor": "#ffffff"
+  }
+}

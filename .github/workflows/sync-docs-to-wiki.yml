@@ -1,0 +1,224 @@
+name: Sync Docs to Wiki
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to sync documentation from"
+        required: true
+        default: "main"
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Checkout wiki
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine branch and sync docs
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            BRANCH_NAME="${{ inputs.branch }}"
+          else
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          fi
+
+          echo "Current branch: $BRANCH_NAME"
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            TARGET_DIR="wiki"
+          elif [ "$BRANCH_NAME" = "develop" ]; then
+            TARGET_DIR="wiki/develop"
+          else
+            TARGET_DIR="wiki"
+            echo "Syncing feature branch to main wiki"
+          fi
+
+          mkdir -p "$TARGET_DIR"
+
+          echo "Syncing docs to $TARGET_DIR..."
+
+          process_md_file() {
+            local source_file="$1"
+            local target_file="$2"
+
+            # Transform links for wiki format:
+            # 1. Remove relative path prefixes
+            # 2. Remove .md extensions from links
+            # 3. Replace slashes with hyphens in internal links
+            sed -E \
+              -e 's|\]\(\.\./|\](|g' \
+              -e 's|\]\(\./|\](|g' \
+              -e 's|\.md\)|)|g' \
+              "$source_file" > "$target_file.tmp"
+
+            # Replace slashes with hyphens in internal links (skip http/https/#)
+            perl -pe 's/\]\(([^)]+)\)/
+              my $link = $1;
+              if ($link !~ m{^(https?:|#)}) {
+                $link =~ s{\/}{-}g;
+              }
+              "]($link)"
+            /ge' "$target_file.tmp" > "$target_file"
+
+            rm "$target_file.tmp"
+          }
+
+          # Sync Home page
+          if [ -f "docs/Home.md" ]; then
+            if [ "$BRANCH_NAME" = "main" ]; then
+              process_md_file "docs/Home.md" "$TARGET_DIR/Home.md"
+            elif [ "$BRANCH_NAME" = "develop" ]; then
+              process_md_file "docs/Home.md" "$TARGET_DIR/Home-Develop.md"
+            else
+              process_md_file "docs/Home.md" "$TARGET_DIR/Home.md"
+            fi
+          fi
+
+          # Sync all documentation files (flat structure for wiki)
+          find docs -name "*.md" -type f | while read -r file; do
+            if [ "$file" = "docs/Home.md" ]; then
+              continue
+            fi
+
+            relative_path="${file#docs/}"
+
+            if [[ "$relative_path" != *"/"* ]]; then
+              flattened_name="$relative_path"
+            else
+              flattened_name=$(echo "$relative_path" | sed 's|/|-|g')
+            fi
+
+            echo "Processing: $file -> $TARGET_DIR/$flattened_name"
+            process_md_file "$file" "$TARGET_DIR/$flattened_name"
+          done
+
+      - name: Create/Update Wiki Sidebar
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            BRANCH_NAME="${{ inputs.branch }}"
+          else
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          fi
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            TARGET_DIR="wiki"
+          else
+            TARGET_DIR="wiki/develop"
+          fi
+
+          # Copy _Sidebar.md from docs if it exists, otherwise generate
+          if [ -f "docs/_Sidebar.md" ]; then
+            cp "docs/_Sidebar.md" "$TARGET_DIR/_Sidebar.md"
+          else
+            cat > "$TARGET_DIR/_Sidebar.md" <<'SIDEBAR_EOF'
+          **[MUC–DEB Allotment Tool](Home)**
+
+          ---
+
+          **Getting Started**
+          - [Quick Start](Getting-Started)
+
+          **Architecture**
+          - [Architecture Overview](Architecture-Overview)
+          - [Security](Security)
+          - [Database Schema](Database-Schema)
+
+          **Development**
+          - [Backend Development](Backend-Development)
+          - [Frontend Development](Frontend-Development)
+          - [ISB Integration](ISB-Integration)
+          - [Email Notifications](Email-Notifications)
+
+          **API**
+          - [API Reference](API-Reference)
+
+          **Testing**
+          - [Testing Guide](Testing-Guide)
+
+          **Operations**
+          - [CI/CD Pipeline](CI-CD-Pipeline)
+          - [Deployment](Deployment)
+
+          **Resources**
+          - [Contributing](Contributing)
+          - [Troubleshooting](Troubleshooting)
+          SIDEBAR_EOF
+          fi
+
+      - name: Create Wiki Footer
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            BRANCH_NAME="${{ inputs.branch }}"
+          else
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          fi
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            TARGET_DIR="wiki"
+            VERSION="Production (main branch)"
+          else
+            TARGET_DIR="wiki/develop"
+            VERSION="Development (develop branch)"
+          fi
+
+          # Copy _Footer.md from docs if it exists, otherwise generate
+          if [ -f "docs/_Footer.md" ]; then
+            cp "docs/_Footer.md" "$TARGET_DIR/_Footer.md"
+          else
+            cat > "$TARGET_DIR/_Footer.md" <<FOOTER_EOF
+          ---
+
+          📚 **MUC–DEB Allotment Tool Documentation** | Version: **$VERSION** | Last Updated: $(date '+%Y-%m-%d %H:%M:%S UTC')
+
+          [🏠 Home](Home) | [📖 Full Docs](https://github.com/${{ github.repository }}/wiki) | [🐛 Report Issue](https://github.com/${{ github.repository }}/issues)
+          FOOTER_EOF
+          fi
+
+      - name: Commit and push wiki changes
+        run: |
+          cd wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            BRANCH_NAME="${{ inputs.branch }}"
+          else
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          fi
+
+          git add .
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Sync documentation from $BRANCH_NAME branch" \
+                       -m "Automated sync from repository docs/ folder" \
+                       -m "Branch: $BRANCH_NAME" \
+                       -m "Commit: ${{ github.sha }}" \
+                       -m "Triggered by: ${{ github.actor }}"
+
+            git push origin master
+            echo "✅ Wiki updated successfully for $BRANCH_NAME branch"
+          fi

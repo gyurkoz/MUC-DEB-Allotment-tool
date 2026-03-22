@@ -1,0 +1,66 @@
+# ========================
+# OS & Editor
+# ========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ========================
+# IDEs
+# ========================
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.factorypath
+.settings/
+!backend/.settings/
+.vscode/
+*.code-workspace
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.*
+!.env.example
+
+# ========================
+# Temporary / scratch
+# ========================
+.tmp/
+
+# ========================
+# Backend — Java / Maven
+# ========================
+backend/**/target/
+backend/**/*.class
+backend/**/*.jar
+backend/**/*.war
+backend/**/*.log
+backend/**/hs_err_pid*
+
+# ========================
+# Frontend — Node / Vite
+# ========================
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+frontend/coverage/
+frontend/.vitest/
+frontend/blob-report/
+
+# ========================
+# Copilot Agent Definitions
+# ========================
+.github/agents/
+
+# ========================
+# Docker
+# ========================
+docker-compose.override.yml

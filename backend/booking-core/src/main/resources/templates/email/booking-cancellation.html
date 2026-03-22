@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Booking Cancelled</title>
+</head>
+<body>
+<h1>Booking Cancelled</h1>
+<p>Dear <span th:text="${booking.passenger.firstName}">John</span>,</p>
+<p>Your booking has been successfully cancelled:</p>
+<table>
+    <tr><td><strong>PNR:</strong></td><td th:text="${booking.pnr}">ABC123</td></tr>
+    <tr><td><strong>Flight:</strong></td><td th:text="${booking.flightNumber}">LH1234</td></tr>
+    <tr><td><strong>Route:</strong></td>
+        <td><span th:text="${booking.departureAirport}">MUC</span> →
+            <span th:text="${booking.arrivalAirport}">DEB</span></td></tr>
+    <tr><td><strong>Status:</strong></td><td th:text="${booking.status}">CANCELLED</td></tr>
+</table>
+<p>If this was done in error, please contact our support team.</p>
+</body>
+</html>
