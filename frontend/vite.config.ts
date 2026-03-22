@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
       port: 3050,
       strictPort: true,
     },
-    base: "./",
+    base: "/",
     plugins: [
       react({
         babel: {
