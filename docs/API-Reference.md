@@ -123,7 +123,7 @@ Create a new booking. **Requires authentication** (Bearer token).
 
 **Validation:**
 - `flightId`: Required, non-blank
-- `uNumber`: Must match `^U[0-9]{7}$` (U followed by exactly 7 digits)
+- `uNumber`: Must match `^U[0-9]{4,}$` (U followed by at least 4 digits)
 - `firstName`, `lastName`: Required, 1–50 characters
 - `email`: Required, valid email format
 - `phoneNumber`: Required, non-blank
