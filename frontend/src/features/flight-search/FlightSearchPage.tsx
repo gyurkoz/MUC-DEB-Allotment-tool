@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Typography } from "@lsy-netline/netline-ui";
+import { Box } from "@lsy-netline/netline-ui";
 import { DirectionSelector, type Direction } from "./DirectionSelector";
 import { FlightCalendar } from "./FlightCalendar";
 
@@ -26,9 +26,6 @@ export function FlightSearchPage() {
 
 	return (
 		<Box data-testid="flight-search-page">
-			<Typography variant="h5" gutterBottom>
-				Search Flights
-			</Typography>
 			<DirectionSelector
 				direction={direction}
 				onChange={handleDirectionChange}
