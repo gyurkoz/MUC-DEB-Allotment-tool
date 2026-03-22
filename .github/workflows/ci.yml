@@ -8,7 +8,7 @@ on:
       - develop
 
 env:
-  NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   frontend:
@@ -172,6 +172,9 @@ jobs:
     needs: [frontend, backend]
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
 
     steps:
       - name: Checkout code
@@ -180,7 +183,7 @@ jobs:
       - name: Build Docker images
         run: docker compose build
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start stack
         run: docker compose up -d
